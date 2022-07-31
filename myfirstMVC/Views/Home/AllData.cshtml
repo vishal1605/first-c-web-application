@@ -1,0 +1,38 @@
+﻿@model IEnumerable<User>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "AllData";
+}
+
+<div class="row my-5">
+    <div class="col-8 m-auto py-3">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Password</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                    <th scope="row">@item.U_id</th>
+                    <td>@item.Email</td>
+                    <td>@item.Name</td>
+                    <td>@item.Psw</td>
+                    <td><a href="EditProcess/@item.U_id" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                    <td><a href="Delete/@item.U_id" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a></td>
+                </tr>
+                }
+
+                
+            </tbody>
+        </table>
+    </div>
+</div>
+
