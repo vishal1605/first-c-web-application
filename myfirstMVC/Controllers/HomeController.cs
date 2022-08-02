@@ -38,52 +38,50 @@ namespace myfirstMVC.Controllers
         }
 
         [HttpPost]
-        public RedirectResult Insert(User u)
+        public JsonResult Insert([FromBody] User u)
         {
-            
-            
+
+
             string query = "insert into tbluser(email,name,psw) values(@email,@name,@psw)";
             //string sql = $"insert into tbluser(email,name,psw) values('{u.Email}','{u.Name}','{u.Password}')";
             SqlConnection con = new SqlConnection(this.Configuration.GetConnectionString("DefaultConnection"));
             int row = con.Execute(query, u);
-            return Redirect("/");
+
+            string getId = "select u_id from tbluser where email=@email and name=@name and psw=@psw";
+            int id = con.QueryFirstOrDefault<int>(getId, u);
+            return Json(id);
 
         }
 
-        public RedirectResult Delete(int id)
+        public JsonResult Delete(int id)
         {
             Console.WriteLine(id);
             string query = "delete from tbluser where u_id=@u_id";
             SqlConnection con = new SqlConnection(this.Configuration.GetConnectionString("DefaultConnection"));
             con.Execute(query, new { U_id = id });
-            return Redirect("/Home/AllData");
+            return Json("Deleted");
         }
 
-        public IActionResult EditProcess(int id)
-        {
-            Console.WriteLine(id);
-            string query = "select * from tbluser where u_id=@u_id";
-            SqlConnection con = new SqlConnection(this.Configuration.GetConnectionString("DefaultConnection"));
-            User u = (User)con.Query<User>(query, new { U_id = id });//Error
-            return View(u);
-        }
+        //public IActionResult EditProcess(int id)
+        //{
+        //    Console.WriteLine(id);
+        //    string query = "select * from tbluser where u_id=@u_id";
+        //    SqlConnection con = new SqlConnection(this.Configuration.GetConnectionString("DefaultConnection"));
+        //    dynamic u=con.QuerySingleOrDefault<User>(query, new { U_id = id });//Error
+        //    Console.WriteLine(u+" Variable");
+        //    return View(u);
+        //}
 
         [HttpPost]
-        public RedirectResult Update(User u)
+        public JsonResult Update(User u)
         {
 
             string query = "update tbluser set email=@email, name=@name, psw=@psw where u_id = @u_id";
             SqlConnection con = new SqlConnection(this.Configuration.GetConnectionString("DefaultConnection"));
-            con.Open();
-            SqlCommand cmd = new SqlCommand(query, con);
-            cmd.Parameters.AddWithValue("@email", u.Email);
-            cmd.Parameters.AddWithValue("@name", u.Name);
-            cmd.Parameters.AddWithValue("@psw", u.Psw);
-            cmd.Parameters.AddWithValue("@u_id", (int)u.U_id);
-            int i = cmd.ExecuteNonQuery();
-            Console.WriteLine("Row affected " + u.Name);
-            con.Close();
-            return Redirect("/Home/AllData");
+            con.Execute(query, u);
+
+
+            return Json("Success");
         }
 
 
